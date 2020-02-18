@@ -4,6 +4,8 @@ Command-line application that dynamically generates a PDF profile from a GitHub 
 
 ## Interface
 
+Recording of application in use: https://drive.google.com/file/d/1zNTwsgyQTk21rTSfyxI9y1Kx4ogsrYDM/view?usp=sharing
+
 The application is invoked with the following command:
 
     ```sh
@@ -26,15 +28,12 @@ The PDF is populated with the following:
 * Number of GitHub stars
 * Number of users following
 
-Refer to <pdf> for example of output profile and <gify> for example application run.
+Style is generated with specified color input using generateHTML.js
 
-## User Story
+## Required Node Packages
 
-```
-GIVEN the developer has a GitHub profile
+*fs : write files
+*electron-html-to : convert html to pdf
+*inquirer : prompt user input
+*axios : api calls
 
-WHEN prompted for the developer's GitHub username and favorite color
-
-THEN a PDF profile is generated
-
-```
