@@ -2,7 +2,7 @@ const fs = require("fs");
 const convertFactory = require("electron-html-to");
 const inquirer = require("inquirer");
 const htmlGenerator = require("./generateHTML.js");
-const fetch = require("node-fetch");
+const axios = require("axios");
 
 const colors = htmlGenerator.colors;
 const generateHTML = htmlGenerator.generateHTML;
@@ -19,7 +19,6 @@ const questions = [
 ];
 let gitName;
 let htmlData;
-let gitData;
 
 
 init();
@@ -41,38 +40,59 @@ function writeToFile(fileName, data) {
      
 }
 
-function init() {
-    inquirer
-    .prompt(questions)
-    .then(function(r) {
-        r.color = r.color.toLowerCase();
-        if(!r.username) {
+// function init() {
+//     inquirer
+//     .prompt(questions)
+//     .then(function(r) {
+//         r.color = r.color.toLowerCase();
+//         if(!r.username) {
+//             console.log("A valid username must be provided.");
+//         } else if (!colors[r.color]) {
+//             console.log("Must enter green, blue, pink, or red");
+//         } else {
+//             htmlData = generateHTML(r);
+//             gitName = r.username.toLowerCase();
+//             getGitAPI();
+//             getStarAPI();
+//             //make async
+//             // generateProfile();
+//         }
+//     });
+// };
+
+async function init() {
+    try {
+        //prompt user for questions
+        const answers = await inquirer.prompt(questions);
+
+        //check user responses
+        answers.color = answers.color.toLowerCase();
+        if(!answers.username) {
             console.log("A valid username must be provided.");
-        } else if (!colors[r.color]) {
+        } else if (!colors[answers.color]) {
             console.log("Must enter green, blue, pink, or red");
         } else {
-            htmlData = generateHTML(r);
-            gitName = r.username.toLowerCase();
-            getGitAPI();
-        }
-    });
+            htmlData = generateHTML(answers);
+            gitName = answers.username.toLowerCase();
+        };
+        
+        //get git api data
+        const gitAPI = await axios.get(`https://api.github.com/users/${gitName}`);
+        const gitData = gitAPI.data;
+        console.log(gitData);
+
+        //get git star api data
+        const starAPI = await axios.get(`https://api.github.com/users/${gitName}/starred`);
+        const gitStars = starAPI.data[0].stargazers_count;
+
+        generateProfile(gitData, gitStars);
+
+    } catch (err) {
+        console.log(err);
+    }
 };
 
-function getGitAPI() {
-    let gitAPI = `https://api.github.com/users/${gitName}`;
-    console.log(gitAPI);
-    fetch(gitAPI)
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(json) {
-            gitData = json;
-            console.log(gitData);
-            generateProfile();
-        });
-};
-
-function generateProfile() {
+function generateProfile(gitData, gitStars) {
 
     let picture = gitData.avatar_url;
     let mapsLink = `https://www.google.com/maps/place/${gitData.location}`;
@@ -82,11 +102,16 @@ function generateProfile() {
     let followers = gitData.followers;
     let following = gitData.following;
     let repos = gitData.public_repos;
-    let stars = "";
+    let stars = gitStars;
+    
+    htmlData += ``
+
     
     //create HTML wrappers for data
     //post to PDF
     //make video
+
+
 
 }
 
