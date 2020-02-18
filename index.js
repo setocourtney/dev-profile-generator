@@ -27,17 +27,8 @@ async function init() {
     try {
         //prompt user for questions
         const answers = await inquirer.prompt(questions);
-
-        //check user responses
+        //convert to lowercase
         answers.color = answers.color.toLowerCase();
-        if(!answers.username) {
-            console.log("A valid username must be provided.");
-        } else if (!colors[answers.color]) {
-            console.log("Must enter green, blue, pink, or red");
-        } else {
-            htmlData = generateHTML(answers);
-            gitName = answers.username.toLowerCase();
-        };
         
         //get git api data
         const gitAPI = await axios.get(`https://api.github.com/users/${gitName}`);
@@ -47,8 +38,16 @@ async function init() {
         const starAPI = await axios.get(`https://api.github.com/users/${gitName}/starred`);
         const gitStars = starAPI.data[0].stargazers_count;
 
-        //generate profile with API data
-        generateProfile(gitData, gitStars);
+        if(!answers.username) {
+            console.log("A valid username must be provided.");
+        } else if (!colors[answers.color]) {
+            console.log("Must enter green, blue, pink, or red");
+        } else {
+            htmlData = generateHTML(answers);
+            gitName = answers.username.toLowerCase();
+            //generate profile with API data
+            generateProfile(gitData, gitStars);
+        };
 
     } catch (err) {
         console.log(err);
