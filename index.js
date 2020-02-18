@@ -23,43 +23,6 @@ let htmlData;
 
 init();
 
-function writeToFile(fileName, data) {
-    var conversion = convertFactory({
-        converterPath: convertFactory.converters.PDF
-      });
-       
-      conversion({ html: `${data}` }, function(err, result) {
-        if (err) {
-          return console.error(err);
-        }
-       
-        console.log(`Developer Profile has been generated: ${fileName}.pdf \n Number of Pages: `+ result.numberOfPages);
-        result.stream.pipe(fs.createWriteStream(`${fileName}.pdf`));
-        conversion.kill(); // necessary if you use the electron-server strategy, see bellow for details
-      });
-     
-}
-
-// function init() {
-//     inquirer
-//     .prompt(questions)
-//     .then(function(r) {
-//         r.color = r.color.toLowerCase();
-//         if(!r.username) {
-//             console.log("A valid username must be provided.");
-//         } else if (!colors[r.color]) {
-//             console.log("Must enter green, blue, pink, or red");
-//         } else {
-//             htmlData = generateHTML(r);
-//             gitName = r.username.toLowerCase();
-//             getGitAPI();
-//             getStarAPI();
-//             //make async
-//             // generateProfile();
-//         }
-//     });
-// };
-
 async function init() {
     try {
         //prompt user for questions
@@ -79,12 +42,12 @@ async function init() {
         //get git api data
         const gitAPI = await axios.get(`https://api.github.com/users/${gitName}`);
         const gitData = gitAPI.data;
-        console.log(gitData);
 
         //get git star api data
         const starAPI = await axios.get(`https://api.github.com/users/${gitName}/starred`);
         const gitStars = starAPI.data[0].stargazers_count;
 
+        //generate profile with API data
         generateProfile(gitData, gitStars);
 
     } catch (err) {
@@ -95,6 +58,7 @@ async function init() {
 function generateProfile(gitData, gitStars) {
 
     let picture = gitData.avatar_url;
+    let fullName = gitData.name;
     let mapsLink = `https://www.google.com/maps/place/${gitData.location}`;
     let gitLink = gitData.html_url;
     let gitWebsite = gitData.blog;
@@ -104,15 +68,75 @@ function generateProfile(gitData, gitStars) {
     let repos = gitData.public_repos;
     let stars = gitStars;
     
-    htmlData += ``
+    htmlData += `
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="photo-header">
+                <img src = ${picture} alt="${fullName}">
+                <h1>Hi!</h1>
+                <h2>My name is ${fullName}!</h2>
+                <div class="links-nav">
+                    <i class="fas fa-location-arrow"></i> <a class="nav-link" href="${mapsLink}">${gitData.location}</a>
+                    <i class="fab fa-github"></i></i> <a class="nav-link" href="${gitLink}">GitHub</a>
+                    <i class="fas fa-external-link-alt"></i> <a class="nav-link" href="${gitWebsite}">Website</a>
+                </div>
+            </div>
+        <main class="container">
+            <div class="row">
+                <div class="col"><h3>${bio}</h3></div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <h3>Public Repositories</h3>
+                        <h5>${repos}</h5>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <h3>Followers</h3>
+                        <h5>${followers}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <h3>GitHub Stars</h3>
+                        <h5>${stars}</h5>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <h3>Following</h3>
+                        <h5>${following}</h5>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    </body>
+</html>    
+    `
+    writeToFile(gitName, htmlData);
+};
 
-    
-    //create HTML wrappers for data
-    //post to PDF
-    //make video
-
-
-
-}
+//create pdf file of developer profile usting html
+function writeToFile(fileName, data) {
+    var conversion = convertFactory({
+        converterPath: convertFactory.converters.PDF
+      });
+       
+      conversion({ html: `${data}` }, function(err, result) {
+        if (err) {
+          return console.error(err);
+        }
+       
+        console.log(`Developer Profile has been generated: ${fileName}.pdf \n Number of Pages: `+ result.numberOfPages);
+        result.stream.pipe(fs.createWriteStream(`${fileName}.pdf`));
+        conversion.kill(); // necessary if you use the electron-server strategy, see bellow for details
+      });
+};
 
 
