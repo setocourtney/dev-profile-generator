@@ -1,0 +1,27 @@
+{
+  "name": "dev-profile-generator",
+  "version": "1.0.0",
+  "description": "create github profile",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "electron-prebuilt": "^1.4.13",
+    "electron-html-to": "^2.6.0",
+    "inquirer": "^7.0.4",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/setocourtney/dev-profile-generator.git"
+  },
+  "author": "setocourtney",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/setocourtney/dev-profile-generator/issues"
+  },
+  "homepage": "https://github.com/setocourtney/dev-profile-generator#readme"
+}
