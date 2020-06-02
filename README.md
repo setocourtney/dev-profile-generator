@@ -2,19 +2,33 @@
 
 Command-line application that dynamically generates a PDF profile from a GitHub username. 
 
+[Recording of Application Interface](https://drive.google.com/file/d/1zNTwsgyQTk21rTSfyxI9y1Kx4ogsrYDM/view?usp=sharing)
+
+## User Story
+
+> AS AN a hiring manager or recruiter <br />
+> I WANT to build profiles for the top developer candidates <br />
+> SO THAT I can easily view the information I need to make a decision
+
+
 ## Interface
 
-Recording of application in use: https://drive.google.com/file/d/1zNTwsgyQTk21rTSfyxI9y1Kx4ogsrYDM/view?usp=sharing
-
 The application is invoked with the following command:
+```node
+node index.js
+```
+OR
 
-    ```sh
-    node index.js
-    ```
+```node
+npm start
+```
+User is prompted for a github username and favorite color to be used to style the cards.
 
-The user is prompted for a favorite color to be used as the background color for cards.
 
-The PDF is populated with the following:
+
+## Functionality
+
+The PDF is populated with the following information:
 
 * Profile image
 * User name
@@ -27,13 +41,25 @@ The PDF is populated with the following:
 * Number of followers
 * Number of GitHub stars
 * Number of users following
+* Style is generated with specified color input.
 
-Style is generated with specified color input using generateHTML.js
 
-## Required Node Packages
 
-*fs : write files
-*electron-html-to : convert html to pdf
-*inquirer : prompt user input
-*axios : api calls
+## Technologies
+
+* [Node.js](https://nodejs.org/en/)
+    * [fs](https://www.npmjs.com/package/fs) 
+    * [electron-html-to](https://www.npmjs.com/package/electron-html-to)
+    * [inquirer](https://www.npmjs.com/package/inquirer)
+    * [axios](https://www.npmjs.com/package/axios)
+
+
+
+## License
+
+[MIT License](https://choosealicense.com/licenses/mit/)
+
+Copyright (c) 2020 Courtney J. Seto
+
+
 
