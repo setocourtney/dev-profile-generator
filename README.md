@@ -26,7 +26,7 @@ User is prompted for a github username and favorite color to be used to style th
 
 
 
-## Functionality
+## Features
 
 The PDF is populated with the following information:
 
